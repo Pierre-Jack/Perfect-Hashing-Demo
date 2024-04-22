@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public interface PerfectHashTable<T> {
+    long getAllocatedSize(); // returns the size of the allocated hash table in sizeOf(T)
     boolean[] insert(T key); // returns an array of two booleans:
                              // the first one is true if the key is inserted successfully (didn't exist before)
                              // the second one is true if the key is inserted without collision
