@@ -23,13 +23,14 @@ import java.util.Random;
         Universal_Hash_Family(int b , int u){
             this.row = b ;
             this.col = u ;
+            this.track.clear(); /* clear the path of hash functions when generating new hash family */
         }
 
         /* function for returning a different random hash function and saving its value for keeping track of all previous hash functions */
         public boolean[][] hash_function(){
             this.generate_func();
             this.check_repetition();
-            this.track.add(this.func);
+            this.track.add(this.func.clone());
             return this.func ;
         }
 
