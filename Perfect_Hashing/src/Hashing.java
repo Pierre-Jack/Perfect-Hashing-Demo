@@ -7,7 +7,6 @@ import java.lang.* ;
         private boolean func[][] ;
         private int b ;
         private int u ;
-        boolean vector [][] ;  /* for testing Main class */
 
         /* construcor for intializing hash function and its dims */
         Hashing(boolean [][] arr){
@@ -33,7 +32,6 @@ import java.lang.* ;
             for (int i=0 ; i<this.u ; i++){
                 vector[i][0] = this.getBit(element , i) ;
             }
-            this.vector = vector ;  /* for testing Main class */
             return vector ;
         }
 
