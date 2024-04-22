@@ -4,17 +4,17 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Dictionary {
-    PerfectHashTable pf;
+    PerfectHashTable<String> pf;
 
     Dictionary(int choice)
     {
         if (choice==1)
         {
-            // pf = new Perfect_Hashing_NSquare();
+            pf = new Perfect_Hashing_NSquare();
         }
         else if (choice==2)
         {
-             // pf = new Perfect_Hashing_N();
+             pf = new Perfect_Hashing_N();
         }
     }
     

@@ -20,7 +20,6 @@ public class Main {
         //cli
         System.out.println("1. O(N2) solution");
         System.out.println("2. O(N) solution");
-        System.out.println("3. Exit");
         System.out.print("Choose your hashing method: ");
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
@@ -38,7 +37,7 @@ public class Main {
             System.out.println("3- Search for");
             System.out.println("4- Batch insert");
             System.out.println("5- Batch delete");
-            System.out.println("7. Exit");
+            System.out.println("6. Exit");
             System.out.print("Enter an operation: ");
             int operation = scanner.nextInt();
             dictionary_control.perform(operation);

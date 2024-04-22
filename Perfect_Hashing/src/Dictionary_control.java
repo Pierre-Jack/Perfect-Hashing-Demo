@@ -34,7 +34,7 @@ public class Dictionary_control {
             System.out.print("Enter the word to search for: ");
             word = scanner.next();
             if (dic.search(word)) {
-                System.out.println("Word is found");s
+                System.out.println("Word is found");
             } else {
                 System.out.println("Word is not found");
             }
