@@ -9,9 +9,9 @@ public interface PerfectHashTable<T> {
     boolean delete(T key); // returns true if the key is deleted (existent one)
 
     int[] batchInsert(ArrayList<T> keys); // returns an array of two numbers:
-                                            // number of successful insertions (didn't exist before)
-                                            // and number of trials until no collision
-
+                                            //[0] number of successful insertions (didn't exist before)
+                                            //[1] and number of trials until no collision (or sum of buket collisions)
+                                            
     int batchDelete(ArrayList<T> keys); // returns number of successful deletions(the existent ones)
     ArrayList<T> getKeys();
 }

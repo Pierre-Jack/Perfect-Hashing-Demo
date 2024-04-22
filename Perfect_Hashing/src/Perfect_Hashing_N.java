@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -5,11 +6,11 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
 
     private int m; // size of hash table
     private int size; // number of elements in the hash table
+    private final int c = 2; // c such that c*m is the maximum size of the allocated hash table, to maintain O(N) space
     private Hasher<T> hasher;
     private ArrayList<PerfectHashTable<T>> hashTable;
+    private final float load_factor = 0.75f;
 
-
-    private float load_factor = 0.75f;
     public Perfect_Hashing_N() {
         this.m = 10;    // default value
         this.hasher = new DummyHasher<>(m);
@@ -31,14 +32,43 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
         }
         return result;
     }
-    private void rehash(){
+    private int[] rehash(ArrayList<T> newKeys){
+
+        int[] result = new int[2];
+
         ArrayList<PerfectHashTable<T>> oldHashTable = hashTable;
-        m *= 2;
+        int oldSize = size;
+        int collisions = 0;
+
+        size += newKeys.size();
+        while (m<=2*size) m = 2*m;
         hashTable = new ArrayList<>(Collections.nCopies(m, null));
         hasher = new DummyHasher<>(m);
-        // insert
+
+        ArrayList<T> allKeys = new ArrayList<>();
+        allKeys.addAll(this.getKeys());
+        allKeys.addAll(newKeys);
+
+        do{
+        size = 0;
+        collisions = 0;
+        for(T key : allKeys) {
+            int index = hasher.hash_code(key);
+            if (hashTable.get(index) == null) {
+                hashTable.set(index, new Perfect_Hashing_NSquare<T>());
+            }
+
+            boolean[] temp = hashTable.get(index).insert(key);
+            if (temp[0] == true) size++;
+            if (temp[0] == true && temp[1] == false) collisions++;
+        }
+        } while(this.getAllocatedSize() > c*m);
+        return new int[]{size - oldSize, collisions};
     }
 
+    private int[] rehash(){
+        return rehash(new ArrayList<T>(0));
+    }
     @Override
     public boolean[] insert(T key) {
         boolean[] result = new boolean[2];
@@ -48,8 +78,8 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
         result = hashTable.get(index).insert(key);
         if (result[0] == true) size++;
         if(size > load_factor*m) rehash();
-        if (result[1] == false) result[1] = (this.getAllocatedSize() < 2*m);
-        if (result[1] == false) rehash(); // rehashes if size != O(m)
+        if (result[1] == false && result[0] == true) result[1] = (this.getAllocatedSize() < c*m);
+        if (result[1] == false && result[0] == true) rehash(); // rehashes if size != O(m)
         return result;
     }
 
@@ -71,18 +101,7 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
 
     @Override
     public int[] batchInsert(ArrayList<T> keys) {
-        int[] result = new int[2];
-        if(size + keys.size() < load_factor*m) {
-            for(T key : keys){
-                boolean[] temp = this.insert(key);
-                if(temp[0] == true) result[0] += 1;
-                if(temp[1] == false) result[1] += 1;
-            }
-            return result;
-        }
-
-        }
-        //
+        return rehash(keys);
     }
 
     @Override
