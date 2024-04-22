@@ -1,6 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Perfect_Hashing_NSquare {
+public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     private int sizeOfMaxInput;     /* size of max input , increasing dynamically with insertion operations */
     private int sizeOfHashTable;    /* size of hash table = M = N^2 */
     private int[] hashTable;        /* hash table */
@@ -139,5 +140,40 @@ public class Perfect_Hashing_NSquare {
     }
     public int getSizeOfHashTable() {
         return sizeOfHashTable;
+    }
+
+    @Override
+    public int getAllocatedSize() {
+        return 0;
+    }
+
+    @Override
+    public boolean[] insert(T key) {
+        return new boolean[0];
+    }
+
+    @Override
+    public boolean search(T key) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(T key) {
+        return false;
+    }
+
+    @Override
+    public int[] batchInsert(ArrayList<T> keys) {
+        return new int[0];
+    }
+
+    @Override
+    public int batchDelete(ArrayList<T> keys) {
+        return 0;
+    }
+
+    @Override
+    public ArrayList<T> getKeys() {
+        return null;
     }
 }
