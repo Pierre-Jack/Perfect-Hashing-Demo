@@ -1,4 +1,5 @@
 import java.lang.* ;
+import java.util.Scanner;
 
 public class Main {
 
@@ -14,6 +15,36 @@ public class Main {
 
 
     public static void main(String[] args) {
+
+
+        //cli
+        System.out.println("1. O(N2) solution");
+        System.out.println("2. O(N) solution");
+        System.out.println("3. Exit");
+        System.out.print("Choose your hashing method: ");
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+        Dictionary_control dictionary_control= new Dictionary_control(choice);
+        if(dictionary_control != null)
+        {
+            System.out.println("Table created successfully");
+        }
+
+        while(true)
+        {
+            System.out.println("Choices");
+            System.out.println("1- Insert");
+            System.out.println("2- Delete");
+            System.out.println("3- Search for");
+            System.out.println("4- Batch insert");
+            System.out.println("5- Batch delete");
+            System.out.println("7. Exit");
+            System.out.print("Enter an operation: ");
+            int operation = scanner.nextInt();
+            dictionary_control.perform(operation);
+        }
+
+
 
 //        Main x = new Main() ;
 //        //int M = 8;
