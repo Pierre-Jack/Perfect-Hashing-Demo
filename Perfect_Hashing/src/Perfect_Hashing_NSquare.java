@@ -36,7 +36,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     public boolean[] insert(T key) {
         int index = this.hasher.hash_code(key);
         boolean[] result = new boolean[2];
-        if(this.isOccupied[index] && this.hashTable[index] == key){
+        if(this.isOccupied[index] && this.hashTable[index].equals(key)){
             result[0] = false;
             result[1] = false;
         }                                                       /* key is inserted already */
@@ -124,13 +124,13 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     @Override
     public boolean search(T key) {
         int index = this.hasher.hash_code(key);
-        return this.isOccupied[index] && this.hashTable[index] == key;
+        return this.isOccupied[index] && this.hashTable[index].equals(key) ;
     }
 
     @Override
     public boolean delete(T key) {
         int index = this.hasher.hash_code(key);
-        if(this.isOccupied[index] && this.hashTable[index] == key){
+        if(this.isOccupied[index] && this.hashTable[index].equals(key)){
             currentInputSize--;
             this.isOccupied[index] = false;
             return true;
@@ -187,10 +187,10 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
 
             for(T key : keys){
                 int index = this.hasher.hash_code(key) ;   /* insert element value in the hashable */
-                if(this.isOccupied[index] && this.hashTable[index] == key){
+                if(this.isOccupied[index] && this.hashTable[index].equals(key)){
                     continue;
                 }
-                else if(this.isOccupied[index] && this.hashTable[index] != key){
+                else if(this.isOccupied[index] && !this.hashTable[index].equals(key)){
                     finished = false;
                     numOfCollisions++;
                     break;
