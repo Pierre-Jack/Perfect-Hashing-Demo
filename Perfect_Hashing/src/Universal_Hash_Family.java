@@ -69,4 +69,12 @@ import java.util.Random;
         public int getCol() {
             return col;
         }
+
+        public boolean[][] getFunc(){
+            return this.func ;
+        }
+
+        public ArrayList<boolean[][]> getTrack (){
+            return this.track ;
+        }
     }
