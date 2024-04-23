@@ -2,6 +2,19 @@ import java.lang.* ;
 import java.util.Scanner;
 
 public class Main {
+    public static void operations()
+    {
+        System.out.println();
+        System.out.println("****OPERATION MENU****");
+        System.out.println("1- Insert");
+        System.out.println("2- Delete");
+        System.out.println("3- Search for");
+        System.out.println("4- Batch insert");
+        System.out.println("5- Batch delete");
+        System.out.println("6- back");
+        System.out.println("7- Exit");
+        System.out.print("Enter an operation: ");
+    }
 
 /*    public void print(boolean [][] arr){
         for(int k=0 ; k<arr.length ; k++){
@@ -17,6 +30,7 @@ public class Main {
 
 
         //cli
+        System.out.println("****HASHING METHODS****");
         System.out.println("1. O(N2) solution");
         System.out.println("2. O(N) solution");
         System.out.print("Choose your hashing method: ");
@@ -30,14 +44,7 @@ public class Main {
 
         while(true)
         {
-            System.out.println("Choices");
-            System.out.println("1- Insert");
-            System.out.println("2- Delete");
-            System.out.println("3- Search for");
-            System.out.println("4- Batch insert");
-            System.out.println("5- Batch delete");
-            System.out.println("6. Exit");
-            System.out.print("Enter an operation: ");
+            operations();
             int operation = scanner.nextInt();
             dictionary_control.perform(operation);
         }

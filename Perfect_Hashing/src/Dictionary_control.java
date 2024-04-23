@@ -42,23 +42,28 @@ public class Dictionary_control {
 
             case 4:
             System.out.print("Enter the path of the file to insert: ");
-            String filePath = scanner.next();
+            String filePath = scanner.nextLine().trim();
             int count = dic.batchInsert(filePath);
             System.out.println(count + " words inserted successfully");
             break;
             
             case 5:
             System.out.print("Enter the path of the file to delete: ");
-            filePath = scanner.next();
+            filePath = scanner.nextLine().trim();
             count = dic.batchDelete(filePath);
             System.out.println(count + " words deleted successfully");
             break;
 
             case 6:
+            Main.main(null);
+
+            case 7:
             System.exit(0);
+
 
             default:
                 System.out.println("Invalid choice");
+                Main.operations();
                 break;
         }
     }
