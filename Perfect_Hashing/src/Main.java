@@ -47,11 +47,12 @@ public class Main {
 /*
         Main x = new Main() ;
         int b = 3;
-        int u = 64;
-        Universal_Hash_Family s = new Universal_Hash_Family(b,u);
+        Universal_Hash_Family<Character> s = new Universal_Hash_Family<>(Character.class , b);
         boolean arr [][] = s.hash_function();
         x.print(arr);
+
 */
+
 
 
 /*
