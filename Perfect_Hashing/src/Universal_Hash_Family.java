@@ -6,7 +6,7 @@ import java.util.Random;
         this class define the universal hash family ,
         generate different random hash functions from the hash family
     */
-    public class Universal_Hash_Family {
+    public class Universal_Hash_Family <T> {
 
     /* elements of func-array could only take 2 values {0 , 1} ,
     for saving space we used boolean array instead of other data types ,
@@ -19,10 +19,26 @@ import java.util.Random;
         private boolean[][] func ;
         private ArrayList<boolean[][]> track = new ArrayList<>() ;
 
+
+
         /* constructor for intializing dim of hash array */
-        Universal_Hash_Family(int b , int u){
+        Universal_Hash_Family(Class<T> type , int b){
             this.row = b ;
-            this.col = u ;
+            if(type.toString().equals("class java.lang.Integer")) {
+                this.col = 32 ;
+            } else if (type.toString().equals("class java.lang.Short")) {
+                this.col = 16 ;
+            } else if (type.toString().equals("class java.lang.Byte")) {
+                this.col = 8 ;
+            } else if (type.toString().equals("class java.lang.Character")) {
+                this.col = 7 ;
+            }else if (type.toString().equals("class java.lang.String")) {
+                this.col = 70 ;
+            } else if (type.toString().equals("class java.lang.Long")) {
+                this.col = 64 ;
+            } else{
+                throw new RuntimeException("couldn't hash these types");
+            }
             this.track.clear(); /* clear the path of hash functions when generating new hash family */
         }
 
