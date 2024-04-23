@@ -1,5 +1,4 @@
 public class UniversalHasher<T> extends Hasher<T> {
-    private int m;
     private int b;
     private Universal_Hash_Family<T> family;
     private Hashing<T> hashing;
@@ -20,6 +19,8 @@ public class UniversalHasher<T> extends Hasher<T> {
         return hashing.hash_code(key);
     }
     public void regenerate(){
+        if (family == null) return;
         hashing = new Hashing<T>(family.hash_function());
     }
+
 }

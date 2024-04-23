@@ -40,9 +40,10 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             //this.sizeOfMaxInput = this.sizeOfMaxInput * 2;        /* increasing max elements am=nd size of Table */
             this.sizeOfMaxInput = this.currentInputSize * 2;
             this.sizeOfHashTable = this.sizeOfMaxInput * this.sizeOfMaxInput;
-            this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
-
-            this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
+//            this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
+//
+//            this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
+            this.hasher = new UniversalHasher<T>(sizeOfHashTable);
         }
 
         boolean finished ;  /* for determining if the rehash operation is done */
@@ -54,13 +55,14 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             this.isOccupied = new boolean[this.sizeOfHashTable];
             Arrays.fill(this.isOccupied, false);
 
-            this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
-            this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
+//            this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
+//            this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
+//
+//            this.func = this.s.hash_function();         /* generate new hash function */
+//            this.h = new Hashing(this.func);
+            this.hasher = new UniversalHasher<T>(sizeOfHashTable);
 
-            this.func = this.s.hash_function();         /* generate new hash function */
-            this.h = new Hashing(this.func);
-
-            int index = this.h.hash_code(key) ;     /* insert element value in the hashable */
+            int index = this.hasher.hash_code(key) ;     /* insert element value in the hashable */
             this.hashTable[index] = key ;
             this.isOccupied[index] = true ;
 
@@ -68,7 +70,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
 
             for(int i=0 ; i<temp.length ; i++){         /* insert elements that are in the hashTable and if there is collision repeat with new function */
                 if(occupied_temp[i]){
-                    index = this.h.hash_code(temp[i]) ;
+                    index = this.hasher.hash_code(temp[i]) ;
 
                     System.out.println("elemnt = " + temp[i] + " , index = " + index ) ;
 
@@ -91,23 +93,32 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         int oldSize = currentInputSize;
         boolean finished ;  /* for determining if the rehash operation is done */
         sizeOfHashTable = (oldSize + keys.size()) * (oldSize + keys.size());
+
+        int tmp = 1;
+        while(tmp < sizeOfHashTable){
+            tmp *= 2;
+        }
+        sizeOfHashTable = tmp;
+
         this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
         this.isOccupied = new boolean[this.sizeOfHashTable];
 
-        this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
-        this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
+//        this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
+//        this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
+        this.hasher = new UniversalHasher<T>(sizeOfHashTable);
 
         int numOfCollisions = 0;
         do{
             finished = true ;
             Arrays.fill(this.isOccupied, false);
-            this.func = this.s.hash_function();         /* generate new hash function */
-            this.h = new Hashing(this.func);
+//            this.func = this.s.hash_function();         /* generate new hash function */
+//            this.h = new Hashing(this.func);
+            hasher.regenerate();
 
 
             for(int i=0 ; i<temp.length ; i++){         /* insert elements that are in the hashTable and if there is collision repeat with new function */
                 if(occupied_temp[i]){
-                    int index = this.h.hash_code(temp[i]) ;
+                    int index = this.hasher.hash_code(temp[i]) ;
 
                     System.out.println("elemnt = " + temp[i] + " , index = " + index ) ;
 
@@ -125,7 +136,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             }
 
             for(T key : keys){
-                int index = this.h.hash_code(key) ;   /* insert element value in the hashable */
+                int index = this.hasher.hash_code(key) ;   /* insert element value in the hashable */
                 if(this.isOccupied[index] && this.hashTable[index] == key){
                     continue;
                 }
@@ -147,15 +158,15 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     public int getCurrentInputSize() {
         return currentInputSize;
     }
-    public boolean[][] getFunc() {
-        return func;
-    }
-    public int getB() {
-        return b;
-    }
-    public int getU() {
-        return u;
-    }
+//    public boolean[][] getFunc() {
+//        return func;
+//    }
+//    public int getB() {
+//        return b;
+//    }
+//    public int getU() {
+//        return u;
+//    }
     public int getSizeOfMaxInput() {
         return sizeOfMaxInput;
     }
@@ -170,7 +181,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
 
     @Override
     public boolean[] insert(T key) {
-        int index = this.h.hash_code(key);
+        int index = this.hasher.hash_code(key);
         boolean[] result = new boolean[2];
         if(this.isOccupied[index] && this.hashTable[index] == key){
             result[0] = false;
@@ -203,13 +214,13 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
 
     @Override
     public boolean search(T key) {
-        int index = this.h.hash_code(key);
+        int index = this.hasher.hash_code(key);
         return this.isOccupied[index] && this.hashTable[index] == key;
     }
 
     @Override
     public boolean delete(T key) {
-                int index = this.h.hash_code(key);
+                int index = this.hasher.hash_code(key);
         if(this.isOccupied[index] && this.hashTable[index] == key){
             currentInputSize--;
             this.isOccupied[index] = false;
