@@ -44,7 +44,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             if ((double) this.currentInputSize / this.sizeOfHashTable > this.load_factor) {
                 /*System.out.println("the size will increase") ;*/
                 result[0] = true;
-                result[1] = true;
+                result[1] = false;
                 currentInputSize++;
                 this.rehash(key , true);       /* increasing size of hashTable , load factor is broken */
             } else {
@@ -81,8 +81,8 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         }
 
         int m = this.sizeOfMaxInput * this.sizeOfMaxInput;
-        this.sizeOfHashTable = (int) Math.pow(2 , Math.ceil (Math.log(m) / Math.log(2))) ;      /* rounding size to nearist power of 2 */ 
-        this.hasher = new UniversalHasher<T>(sizeOfHashTable);  /* creating new universal hash family */ 
+        this.sizeOfHashTable = (int) Math.pow(2 , Math.ceil (Math.log(m) / Math.log(2))) ;      /* rounding size to nearist power of 2 */
+        this.hasher = new UniversalHasher<T>(sizeOfHashTable);  /* creating new universal hash family */
 
         boolean finished ;  /* for determining if the rehash operation is done */
         do{
@@ -139,42 +139,36 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             return false;
         }
     }
-    
+
+    @Override
+    public int[] batchInsert(ArrayList<T> keys) {
+        return batchRehash(keys);
+    }
     private int[] batchRehash(ArrayList<T> keys){
         T[] temp = this.hashTable.clone();        /* copy hashTable and occupied function */
         boolean [] occupied_temp = this.isOccupied.clone() ;
-        int oldSize = currentInputSize;
-        boolean finished ;  /* for determining if the rehash operation is done */
-        sizeOfHashTable = (oldSize + keys.size()) * (oldSize + keys.size());
 
-        int tmp = 1;
-        while(tmp < sizeOfHashTable){
-            tmp *= 2;
-        }
-        sizeOfHashTable = tmp;
+        int oldSize = this.currentInputSize;
+        this.sizeOfMaxInput = oldSize + keys.size() ;
+        int m = this.sizeOfMaxInput * this.sizeOfMaxInput;
+        this.sizeOfHashTable = (int) Math.pow(2 , Math.ceil (Math.log(m) / Math.log(2)));
 
-        this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
-        this.isOccupied = new boolean[this.sizeOfHashTable];
-
-//        this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
-//        this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
         this.hasher = new UniversalHasher<T>(sizeOfHashTable);
 
+        boolean finished ;  /* for determining if the rehash operation is done */
         int numOfCollisions = 0;
         do{
             finished = true ;
+            boolean finished_old = true ;       /* for check if the old elements are done */
+            this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
+            this.isOccupied = new boolean[this.sizeOfHashTable];
             Arrays.fill(this.isOccupied, false);
-//            this.func = this.s.hash_function();         /* generate new hash function */
-//            this.h = new Hashing(this.func);
-            hasher.regenerate();
-
+            this.hasher.regenerate();
 
             for(int i=0 ; i<temp.length ; i++){         /* insert elements that are in the hashTable and if there is collision repeat with new function */
                 if(occupied_temp[i]){
                     int index = this.hasher.hash_code(temp[i]) ;
-
-                    System.out.println("elemnt = " + temp[i] + " , index = " + index ) ;
-
+                    /*System.out.println("elemnt = " + temp[i] + " , index = " + index ) ;*/
                     if(!this.isOccupied[index]){
                         this.hashTable[index] = temp[i] ;
                         this.isOccupied[index] = true ;
@@ -182,30 +176,44 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
                     else {
                         finished = false ;          /* collision , create new hash function */
                         numOfCollisions++;
-                        System.out.println("collision , will re-build") ;
+                        /*System.out.println("collision , will re-build") ;*/
+                        finished_old = false ;
                         break ;
                     }
                 }
             }
+            if(!finished_old)
+                break ;
 
             for(T key : keys){
                 int index = this.hasher.hash_code(key) ;   /* insert element value in the hashable */
                 if(this.isOccupied[index] && this.hashTable[index] == key){
                     continue;
                 }
-                if(this.isOccupied[index] && this.hashTable[index] != key){
+                else if(this.isOccupied[index] && this.hashTable[index] != key){
                     finished = false;
                     numOfCollisions++;
                     break;
                 }
-                this.hashTable[index] = key ;
-                this.isOccupied[index] = true ;
-                currentInputSize++;
+                else {
+                    this.hashTable[index] = key;
+                    this.isOccupied[index] = true;
+                    this.currentInputSize++;
+                }
             }
-
         }while(!finished) ;
 
-        return new int[]{currentInputSize - oldSize, numOfCollisions};
+        return new int[]{this.currentInputSize - oldSize, numOfCollisions};
+    }
+    @Override
+    public int batchDelete(ArrayList<T> keys) {
+        int numOfDeletion = 0;
+        for(T key : keys){
+            if(this.delete(key) == true){
+                numOfDeletion += 1;
+            }
+        }
+        return numOfDeletion;
     }
 
     public int getCurrentInputSize() {
@@ -224,23 +232,6 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     }
 
 
-
-
-    @Override
-    public int[] batchInsert(ArrayList<T> keys) {
-        return batchRehash(keys);
-    }
-
-    @Override
-    public int batchDelete(ArrayList<T> keys) {
-        int numOfDeletion = 0;
-        for(T key : keys){
-            if(this.delete(key) == true){
-                numOfDeletion += 1;
-            }
-        }
-        return numOfDeletion;
-    }
 
     @Override
     public ArrayList<T> getKeys() {
