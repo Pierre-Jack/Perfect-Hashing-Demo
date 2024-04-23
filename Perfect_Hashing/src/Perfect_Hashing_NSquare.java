@@ -40,7 +40,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     public boolean[] insert(T key) {
         int index = this.hasher.hash_code(key);
         boolean[] result = new boolean[2];
-        if(this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key)){ /* key is inserted already */
+        if(this.isOccupied[index] && this.hashTable[index].equals(key)){ /* key is inserted already */
             result[0] = false;
             result[1] = false;
         }
@@ -130,13 +130,13 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     @Override
     public boolean search(T key) {
         int index = this.hasher.hash_code(key);
-        return this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key);
+        return this.isOccupied[index] && this.hashTable[index].equals(key);
     }
 
     @Override
     public boolean delete(T key) {
         int index = this.hasher.hash_code(key);
-        if(this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key)){
+        if(this.isOccupied[index] && this.hashTable[index].equals(key)){
             currentInputSize--;
             this.isOccupied[index] = false;
             return true;
@@ -192,8 +192,8 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             if(finished_old) {
                 for (T key : keys) {
                     int index = this.hasher.hash_code(key);   /* insert element value in the hashable */
-                    if (this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key)) {}
-                    else if (this.isOccupied[index] && !this.check_equality_of(this.hashTable[index],key)) {
+                    if (this.isOccupied[index] && this.hashTable[index].equals(key)) {}
+                    else if (this.isOccupied[index] && !this.hashTable[index].equals(key)) {
                         finished = false;
                         numOfCollisions++;
                         break;
@@ -249,11 +249,5 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             }
         }
         return keys;
-    }
-    /* Function for check equality for two keys */
-    private boolean check_equality_of(T key1 , T key2 ){
-        if(key1 instanceof String)
-            return key1.equals(key2) ;
-        return key1 == key2 ;
     }
 }
