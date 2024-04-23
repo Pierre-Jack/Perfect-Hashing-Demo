@@ -22,19 +22,19 @@ import java.util.Random;
 
 
         /* constructor for intializing dim of hash array */
-        Universal_Hash_Family(Class<T> type , int b){
+        Universal_Hash_Family(T type , int b){
             this.row = b ;
-            if(type.toString().equals("class java.lang.Integer")) {
+            if(type instanceof Integer) {
                 this.col = 32 ;
-            } else if (type.toString().equals("class java.lang.Short")) {
+            } else if (type instanceof Short) {
                 this.col = 16 ;
-            } else if (type.toString().equals("class java.lang.Byte")) {
+            } else if (type instanceof Byte) {
                 this.col = 8 ;
-            } else if (type.toString().equals("class java.lang.Character")) {
+            } else if (type instanceof Character) {
                 this.col = 7 ;
-            }else if (type.toString().equals("class java.lang.String")) {
+            }else if (type instanceof String) {
                 this.col = 70 ;
-            } else if (type.toString().equals("class java.lang.Long")) {
+            } else if (type instanceof Long) {
                 this.col = 64 ;
             } else{
                 throw new RuntimeException("couldn't hash these types");

@@ -12,7 +12,7 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
     private final float load_factor = 0.75f;
 
     public Perfect_Hashing_N() {
-        this.m = 10;    // default value
+        this.m = 8;    // default value
         this.hasher = new DummyHasher<>(m);
         this.hashTable = new ArrayList<>(Collections.nCopies(m, null)); // initialize with null
 

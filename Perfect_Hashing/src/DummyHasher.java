@@ -14,5 +14,10 @@ public class DummyHasher<T> extends Hasher<T> {
         Random rand = new Random();
         this.random = rand.nextInt();
     }
+    public void regenerate(int m){
+        this.m = m;
+        Random rand = new Random();
+        this.random = rand.nextInt();
+    }
 
 }

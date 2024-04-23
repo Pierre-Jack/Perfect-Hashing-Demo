@@ -7,4 +7,6 @@ public abstract class Hasher<T> {
         this.m = m;
     }
 
+    abstract void regenerate(int m);
+
 }

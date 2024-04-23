@@ -5,11 +5,13 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     private int sizeOfMaxInput;     /* size of max input , increasing dynamically with insertion operations */
     private int sizeOfHashTable;    /* size of hash table = M = N^2 */
     private T[] hashTable;        /* hash table */
-    private boolean[][] func ;      /* array of hash func */
-    private int b ;                 /* M = 2 ^ b  , so b = log (M) to the base 2 */
-    private int u ;                 /* length of hashed element , 32bit for integer , and so on ...... */
-    private Universal_Hash_Family s ;   /* object from the universal hash family */
-    private Hashing h ;                 /* object from the Hashing class */
+
+//    private boolean[][] func ;      /* array of hash func */
+//    private int b ;                 /* M = 2 ^ b  , so b = log (M) to the base 2 */
+//    private int u ;                 /* length of hashed element , 32bit for integer , and so on ...... */
+//    private Universal_Hash_Family s ;   /* object from the universal hash family */
+//    private Hashing h ;                 /* object from the Hashing class */
+    private Hasher<T> hasher;
     private int currentInputSize;       /* keep track of number of elements inserted */
     private boolean[] isOccupied;       /* keep track for indexes that is used in hashTable */
     private double load_factor ;        /* load factor for percentage of filling hashTable */
@@ -17,11 +19,12 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     public Perfect_Hashing_NSquare() {
         this.sizeOfMaxInput = 8;        /* initial Max input */
         this.sizeOfHashTable = this.sizeOfMaxInput*this.sizeOfMaxInput;
-        this.b = (int) (Math.log(this.sizeOfHashTable) /Math.log(2) ) ;
-        this.u = 70 ;
-        this.s = new Universal_Hash_Family(this.b,this.u) ; /* creating universal hash family */
-        this.func = this.s.hash_function();
-        this.h = new Hashing(this.func);
+//        this.b = (int) (Math.log(this.sizeOfHashTable) /Math.log(2) ) ;
+//        this.u = 70 ;
+//        this.s = new Universal_Hash_Family(this.b,this.u) ; /* creating universal hash family */
+//        this.func = this.s.hash_function();
+//        this.h = new Hashing(this.func);
+        this.hasher = new UniversalHasher<T>(sizeOfHashTable);
         this.currentInputSize = 0;
         this.hashTable = (T[]) new Object[this.sizeOfHashTable];
         this.isOccupied = new boolean[this.sizeOfHashTable];
