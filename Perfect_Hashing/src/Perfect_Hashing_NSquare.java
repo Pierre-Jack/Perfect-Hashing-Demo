@@ -162,13 +162,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
 
     @Override
     public int getAllocatedSize() {
-        int allocatedSize = 0;
-        for(int i=0 ; i<this.sizeOfHashTable ; i++){
-            if(this.isOccupied[i]){
-                allocatedSize++;
-            }
-        }
-        return allocatedSize;
+        return sizeOfHashTable;
     }
 
     @Override
