@@ -31,6 +31,21 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         Arrays.fill(this.isOccupied , false) ;
         this.load_factor = .75 ;
     }
+    public Perfect_Hashing_NSquare(int sizeOfMaxInput) {
+        this.sizeOfMaxInput = sizeOfMaxInput;        /* initial Max input */
+        this.sizeOfHashTable = this.sizeOfMaxInput*this.sizeOfMaxInput;
+//        this.b = (int) (Math.log(this.sizeOfHashTable) /Math.log(2) ) ;
+//        this.u = 70 ;
+//        this.s = new Universal_Hash_Family(this.b,this.u) ; /* creating universal hash family */
+//        this.func = this.s.hash_function();
+//        this.h = new Hashing(this.func);
+        this.hasher = new UniversalHasher<T>(sizeOfHashTable);
+        this.currentInputSize = 0;
+        this.hashTable = (T[]) new Object[this.sizeOfHashTable];
+        this.isOccupied = new boolean[this.sizeOfHashTable];
+        Arrays.fill(this.isOccupied , false) ;
+        this.load_factor = .75 ;
+    }
 
     private void rehash(T key , boolean load_factor_broken){
         T[] temp = this.hashTable.clone();        /* copy hashTable and occupied function */
@@ -40,6 +55,11 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             //this.sizeOfMaxInput = this.sizeOfMaxInput * 2;        /* increasing max elements am=nd size of Table */
             this.sizeOfMaxInput = this.currentInputSize * 2;
             this.sizeOfHashTable = this.sizeOfMaxInput * this.sizeOfMaxInput;
+            int tmp = 1;
+            while(tmp < sizeOfHashTable){
+                tmp *= 2;
+            }
+            sizeOfHashTable = tmp;
 //            this.b = (int) (Math.log(this.sizeOfHashTable) / Math.log(2));
 //
 //            this.s = new Universal_Hash_Family(this.b, this.u);       /* generating new hash family */
@@ -50,6 +70,12 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
 
         do{
             sizeOfHashTable = currentInputSize * currentInputSize;
+            int tmp = 1;
+            while(tmp < sizeOfHashTable){
+                tmp *= 2;
+            }
+            sizeOfHashTable = tmp;
+
             finished = true ;
             this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
             this.isOccupied = new boolean[this.sizeOfHashTable];
@@ -192,7 +218,8 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             if ((double) this.currentInputSize / this.sizeOfMaxInput > this.load_factor) {
 
                 System.out.println("the size will increase") ;
-
+                result[0] = true;
+                result[1] = false;
                 this.rehash(key , true);       /* increasing size of hashTable */
             } else {
                 if (!this.isOccupied[index]) {      /* no corner case , inserted normally */

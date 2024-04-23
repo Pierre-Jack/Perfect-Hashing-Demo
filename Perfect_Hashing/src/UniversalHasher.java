@@ -21,6 +21,7 @@ public class UniversalHasher<T> extends Hasher<T>{
         return hashing.hash_code(key);
     }
     public void regenerate(){
+        if (family == null) return;
         this.func = family.hash_function();
         hashing = new Hashing<T>(this.func);
     }

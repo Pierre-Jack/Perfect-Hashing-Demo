@@ -6,20 +6,20 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
 
     private int m; // size of hash table
     private int size; // number of elements in the hash table
-    private final int c = 2; // c such that c*m is the maximum size of the allocated hash table, to maintain O(N) space
+    private final int c = 10; // c such that c*m is the maximum size of the allocated hash table, to maintain O(N) space
     private Hasher<T> hasher;
     private ArrayList<PerfectHashTable<T>> hashTable;
     private final float load_factor = 0.75f;
 
     public Perfect_Hashing_N() {
-        this.m = 8;    // default value
-        this.hasher = new DummyHasher<>(m);
+        this.m = 16;    // default value
+        this.hasher = new UniversalHasher<>(m);
         this.hashTable = new ArrayList<>(Collections.nCopies(m, null)); // initialize with null
 
     }
     public Perfect_Hashing_N(int m) {
         this.m = m;
-        this.hasher = new DummyHasher<>(m);
+        this.hasher = new UniversalHasher<>(m);
         this.hashTable = new ArrayList<>(Collections.nCopies(m, null)); // initialize with null
 
     }
@@ -36,17 +36,17 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
 
         int[] result = new int[2];
 
-        ArrayList<PerfectHashTable<T>> oldHashTable = hashTable;
+        ArrayList<T> oldKeys = this.getKeys();
         int oldSize = size;
         int collisions = 0;
 
         size += newKeys.size();
-        while (m<=2*size) m = 2*m;
+        while (m < size) m = 2*m;
         hashTable = new ArrayList<>(Collections.nCopies(m, null));
-        hasher = new DummyHasher<>(m);
+        hasher = new UniversalHasher<>(m);
 
         ArrayList<T> allKeys = new ArrayList<>();
-        allKeys.addAll(this.getKeys());
+        allKeys.addAll(oldKeys);
         allKeys.addAll(newKeys);
 
         do{
@@ -55,7 +55,7 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
         for(T key : allKeys) {
             int index = hasher.hash_code(key);
             if (hashTable.get(index) == null) {
-                hashTable.set(index, new Perfect_Hashing_NSquare<T>());
+                hashTable.set(index, new Perfect_Hashing_NSquare<T>(4));
             }
 
             boolean[] temp = hashTable.get(index).insert(key);
@@ -117,8 +117,99 @@ public class Perfect_Hashing_N<T> implements PerfectHashTable<T>{
     public ArrayList<T> getKeys() {
         ArrayList<T> result  = new ArrayList<>();
         for(PerfectHashTable<T> table : hashTable){
-            result.addAll(table.getKeys());
+           if(table != null) result.addAll(table.getKeys());
         }
         return result;
+    }
+
+
+
+
+
+
+
+
+    public static void main(String[] args) {
+        PerfectHashTable<Integer> perfect_hashing = new Perfect_Hashing_N<>() ;
+//        perfect_hashing_nSquare.insert(10);
+//        perfect_hashing_nSquare.insert(18);
+//        perfect_hashing_nSquare.insert(25);
+//        perfect_hashing_nSquare.insert(39);
+//        perfect_hashing_nSquare.insert(65);
+//        perfect_hashing_nSquare.insert(82);
+//        perfect_hashing_nSquare.insert(111);
+//        System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
+//        System.out.println(perfect_hashing_nSquare.getAllocatedSize());
+//        System.out.println(perfect_hashing_nSquare.getKeys());
+//        perfect_hashing_nSquare.delete(10);
+//        perfect_hashing_nSquare.delete(18);
+//        perfect_hashing_nSquare.delete(25);
+//        perfect_hashing_nSquare.delete(39);
+//        perfect_hashing_nSquare.delete(65);
+//        perfect_hashing_nSquare.delete(82);
+//        System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
+//        System.out.println(perfect_hashing_nSquare.getAllocatedSize());
+//        System.out.println(perfect_hashing_nSquare.getKeys());
+//        System.out.println(perfect_hashing_nSquare.search(111));
+//        System.out.println(perfect_hashing_nSquare.search(10));
+        ArrayList<Integer> keys = new ArrayList<>();
+        keys.add(10);
+        keys.add(18);
+        keys.add(25);
+        keys.add(39);
+        keys.add(65);
+        keys.add(82);
+        keys.add(111);
+        keys.add(82);
+        System.out.println(perfect_hashing.batchInsert(keys)[0]);
+        //     System.out.println(perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println(perfect_hashing.getKeys());
+        ArrayList<Integer> keys3 = new ArrayList<>();
+
+        keys3.add(65);
+        keys3.add(82);
+        keys3.add(111);
+        keys3.add(82);
+        keys3.add(100);
+        System.out.println(perfect_hashing.batchInsert(keys3)[0]);
+        System.out.println(perfect_hashing.getKeys());
+
+        ArrayList<Integer> keys2 = new ArrayList<>();
+        keys2.add(10);
+        keys2.add(10);
+        keys2.add(111);
+        keys2.add(25);
+        keys2.add(30);
+        perfect_hashing.batchDelete(keys2);
+        System.out.println();
+        System.out.println(perfect_hashing.getAllocatedSize());
+        System.out.println(perfect_hashing.getKeys());
+        System.out.println(perfect_hashing.search(30));
+        System.out.println(perfect_hashing.search(111));
+        System.out.println(perfect_hashing.search(39));
+
+//        Perfect_Hashing_NSquare<String> perfect_hashing_nSquare = new Perfect_Hashing_NSquare<>() ;
+//        perfect_hashing_nSquare.insert("hello");
+//        perfect_hashing_nSquare.insert("world");
+//        perfect_hashing_nSquare.insert("this");
+//        perfect_hashing_nSquare.insert("is");
+//        perfect_hashing_nSquare.insert("a");
+//        perfect_hashing_nSquare.insert("test");
+//
+//        System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
+//System.out.println(perfect_hashing_nSquare.getAllocatedSize());
+//System.out.println(perfect_hashing_nSquare.getKeys());
+//perfect_hashing_nSquare.delete("hello");
+//perfect_hashing_nSquare.delete("world");
+//        perfect_hashing_nSquare.delete("world");
+//        perfect_hashing_nSquare.delete("ff");
+//System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
+//System.out.println(perfect_hashing_nSquare.getAllocatedSize());
+//System.out.println(perfect_hashing_nSquare.getKeys());
+//
+//System.out.println(perfect_hashing_nSquare.search("this"));
+
+
+
     }
 }
