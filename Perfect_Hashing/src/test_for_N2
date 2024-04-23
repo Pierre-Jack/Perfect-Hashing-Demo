@@ -1,0 +1,133 @@
+import java.lang.* ;
+
+public class test_for_N2 {
+
+    public static void main(String[] args) {
+/*
+        Perfect_Hashing_NSquare<Integer> perfect_hashing_nSquare = new Perfect_Hashing_NSquare<>() ;
+
+
+        perfect_hashing_nSquare.insert(10);
+        perfect_hashing_nSquare.insert(18);
+        perfect_hashing_nSquare.insert(25);
+        perfect_hashing_nSquare.insert(39);
+        perfect_hashing_nSquare.insert(65);
+        perfect_hashing_nSquare.insert(82);
+        perfect_hashing_nSquare.insert(111);
+        perfect_hashing_nSquare.insert(10);
+        perfect_hashing_nSquare.insert(18);
+        perfect_hashing_nSquare.insert(25);
+        perfect_hashing_nSquare.insert(39);
+        perfect_hashing_nSquare.insert(65);
+        perfect_hashing_nSquare.insert(82);
+        perfect_hashing_nSquare.insert(111);
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        perfect_hashing_nSquare.delete(10);
+        perfect_hashing_nSquare.delete(18);
+        perfect_hashing_nSquare.delete(25);
+        perfect_hashing_nSquare.delete(39);
+        perfect_hashing_nSquare.delete(65);
+        perfect_hashing_nSquare.delete(82);
+
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        System.out.println(perfect_hashing_nSquare.search(111));
+        System.out.println(perfect_hashing_nSquare.search(10));
+        System.out.println();
+
+
+        ArrayList<Integer> keys = new ArrayList<>();
+        keys.add(10);
+        keys.add(18);
+        keys.add(25);
+        keys.add(39);
+        keys.add(65);
+        keys.add(82);
+        keys.add(111);
+        keys.add(82);
+        int [] result  = perfect_hashing_nSquare.batchInsert(keys) ;
+        System.out.println("successful insertions = " + result[0] + " , number of collisions = " + result[1]);
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());
+        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        ArrayList<Integer> keys3 = new ArrayList<>();
+        keys3.add(65);
+        keys3.add(82);
+        keys3.add(111);
+        keys3.add(82);
+        keys3.add(100);
+
+        int [] result1  = perfect_hashing_nSquare.batchInsert(keys3) ;
+        System.out.println("successful insertions = " + result1[0] + " , number of collisions = " + result1[1]);
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());
+        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        ArrayList<Integer> keys2 = new ArrayList<>();
+        keys2.add(10);
+        keys2.add(10);
+        keys2.add(111);
+        keys2.add(25);
+        keys2.add(30);
+        System.out.println("Successful deletion = " + perfect_hashing_nSquare.batchDelete(keys2));
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());
+        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        System.out.println(perfect_hashing_nSquare.search(30));
+        System.out.println(perfect_hashing_nSquare.search(111));
+        System.out.println(perfect_hashing_nSquare.search(39));
+
+*/
+/*        Perfect_Hashing_NSquare<String> perfect_hashing_nSquare = new Perfect_Hashing_NSquare<>() ;
+        perfect_hashing_nSquare.insert("hello");
+        perfect_hashing_nSquare.insert("world");
+        perfect_hashing_nSquare.insert("this");
+        perfect_hashing_nSquare.insert("is");
+        perfect_hashing_nSquare.insert("a");
+        perfect_hashing_nSquare.insert("test");
+
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());
+        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        System.out.println(perfect_hashing_nSquare.delete("hello"));
+        System.out.println(perfect_hashing_nSquare.delete("world"));
+        System.out.println(perfect_hashing_nSquare.delete("world"));
+        System.out.println(perfect_hashing_nSquare.delete("ff"));
+        System.out.println();
+
+        System.out.println("current input size = " +perfect_hashing_nSquare.getCurrentInputSize());
+        System.out.println("SizeOfMaxInput = " + perfect_hashing_nSquare.getSizeOfMaxInput());
+        System.out.println("AllocatedSize = " + perfect_hashing_nSquare.getAllocatedSize());
+        System.out.println("keys = " + perfect_hashing_nSquare.getKeys());
+        System.out.println("number of rehashing times = " + perfect_hashing_nSquare.getNumber_of_rehashing_times());
+        System.out.println();
+
+        System.out.println(perfect_hashing_nSquare.search("this"));*/
+
+    }
+}
+
