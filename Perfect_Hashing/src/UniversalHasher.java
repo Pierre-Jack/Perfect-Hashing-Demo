@@ -8,7 +8,7 @@ public class UniversalHasher<T> extends Hasher<T>{
     public UniversalHasher(int m) {
         super(m);
         this.b = (int) (Math.log(m) /Math.log(2) ) ;
-        System.out.println("b= " + this.b) ;
+        //System.out.println("b= " + this.b) ;
     }
 
     @Override
