@@ -19,10 +19,7 @@ public class UniversalHasher<T> extends Hasher<T> {
         }
         return hashing.hash_code(key);
     }
-    public void regenerate(int m){
-        this.m = m;
-        b = 0;
-        while((1 << b) < m) b += 1;
+    public void regenerate(){
         hashing = new Hashing<T>(family.hash_function());
     }
 }
