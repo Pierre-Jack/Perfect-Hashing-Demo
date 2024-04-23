@@ -10,6 +10,8 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     private boolean[] isOccupied;       /* keep track for indexes that is used in hashTable */
     private double load_factor ;        /* load factor for percentage of filling hashTable */
 
+    private int number_of_rehashing_times ;
+
     public Perfect_Hashing_NSquare() {
         this.sizeOfMaxInput = 4;        /* initial Max input */
         this.sizeOfHashTable = this.sizeOfMaxInput*this.sizeOfMaxInput;
@@ -19,6 +21,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         this.isOccupied = new boolean[this.sizeOfHashTable];
         Arrays.fill(this.isOccupied , false) ;
         this.load_factor = .75 ;
+        this.number_of_rehashing_times = 0 ;
     }
 
     public Perfect_Hashing_NSquare(int sizeOfMaxInput) {        /* constructor with N passed from user */
@@ -30,34 +33,32 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         this.isOccupied = new boolean[this.sizeOfHashTable];
         Arrays.fill(this.isOccupied , false) ;
         this.load_factor = .75 ;
+        this.number_of_rehashing_times =0 ;
     }
 
     @Override
     public boolean[] insert(T key) {
         int index = this.hasher.hash_code(key);
         boolean[] result = new boolean[2];
-        if(this.isOccupied[index] && this.hashTable[index].equals(key)){
+        if(this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key)){ /* key is inserted already */
             result[0] = false;
             result[1] = false;
-        }                                                       /* key is inserted already */
+        }
         else{
             if ((double) this.currentInputSize / this.sizeOfHashTable > this.load_factor) {
-                /*System.out.println("the size will increase") ;*/
                 result[0] = true;
                 result[1] = false;
-                currentInputSize++;
+                this.currentInputSize++;
                 this.rehash(key , true);       /* increasing size of hashTable , load factor is broken */
             } else {
                 if (!this.isOccupied[index]) {      /* no corner case , inserted normally */
                     this.hashTable[index] = key;
                     this.isOccupied[index] = true;
-                    /*System.out.println("no problem , will insert") ;*/
                     result[0] = true;
                     result[1] = true;
-                    currentInputSize++;
+                    this.currentInputSize++;
                 } else {
-                    /*System.out.println("collision , will re-build") ;*/
-                    currentInputSize++;
+                    this.currentInputSize++;
                     this.rehash(key , false);       /* collision , re-build and choosing new hash function */
                     result[0] = true;
                     result[1] = false;
@@ -84,35 +85,40 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         this.sizeOfHashTable = (int) Math.pow(2 , Math.ceil (Math.log(m) / Math.log(2))) ;      /* rounding size to nearist power of 2 */
         this.hasher = new UniversalHasher<T>(sizeOfHashTable);  /* creating new universal hash family */
 
+
+
         boolean finished ;  /* for determining if the rehash operation is done */
         do{
+            if(!load_factor_broken)
+                this.number_of_rehashing_times ++ ;
+
             finished = true ;
             this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
             this.isOccupied = new boolean[this.sizeOfHashTable];
             Arrays.fill(this.isOccupied, false);
 
+            System.out.println("will re-build with N = " + this.sizeOfMaxInput +  " , load factor broken = " + load_factor_broken) ;
+
             this.hasher.regenerate();                       /* regenrate new hash function */
             int index = this.hasher.hash_code(key) ;     /* insert element value in the hashable */
             this.hashTable[index] = key ;
             this.isOccupied[index] = true ;
-            /*System.out.println("element = " + key + " , index = " + index ) ;*/
 
             for(int i=0 ; i<temp.length ; i++){         /* insert elements that are in the hashTable and if there is collision repeat with new function */
                 if(occupied_temp[i]){
                     index = this.hasher.hash_code(temp[i]) ;
-                    /*System.out.println("elemnt = " + temp[i] + " , index = " + index ) ;*/
                     if(!this.isOccupied[index]){
                         this.hashTable[index] = temp[i] ;
                         this.isOccupied[index] = true ;
                     }
                     else {
                         finished = false ;          /* collision , create new hash function */
-                        /*System.out.println("collision , will re-build") ;*/
                         if(this.sizeOfMaxInput != this.currentInputSize){
                             this.sizeOfMaxInput = this.currentInputSize ;
                             m = this.sizeOfMaxInput * this.sizeOfMaxInput;
                             this.sizeOfHashTable = (int) Math.pow(2 , Math.ceil (Math.log(m) / Math.log(2))) ;
                             this.hasher = new UniversalHasher<T>(sizeOfHashTable);  /* creating new universal hash family */
+                            load_factor_broken = false ;
                         }
                         break ;
                     }
@@ -124,13 +130,13 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     @Override
     public boolean search(T key) {
         int index = this.hasher.hash_code(key);
-        return this.isOccupied[index] && this.hashTable[index].equals(key) ;
+        return this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key);
     }
 
     @Override
     public boolean delete(T key) {
         int index = this.hasher.hash_code(key);
-        if(this.isOccupied[index] && this.hashTable[index].equals(key)){
+        if(this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key)){
             currentInputSize--;
             this.isOccupied[index] = false;
             return true;
@@ -153,11 +159,14 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         int m = this.sizeOfMaxInput * this.sizeOfMaxInput;
         this.sizeOfHashTable = (int) Math.pow(2 , Math.ceil (Math.log(m) / Math.log(2)));
 
-        this.hasher = new UniversalHasher<T>(sizeOfHashTable);
+        this.hasher = new UniversalHasher<T>(this.sizeOfHashTable);
 
         boolean finished ;  /* for determining if the rehash operation is done */
         int numOfCollisions = 0;
+
+        int number_of_successful_insertions ;
         do{
+            number_of_successful_insertions = 0 ;
             finished = true ;
             boolean finished_old = true ;       /* for check if the old elements are done */
             this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
@@ -168,7 +177,6 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             for(int i=0 ; i<temp.length ; i++){         /* insert elements that are in the hashTable and if there is collision repeat with new function */
                 if(occupied_temp[i]){
                     int index = this.hasher.hash_code(temp[i]) ;
-                    /*System.out.println("elemnt = " + temp[i] + " , index = " + index ) ;*/
                     if(!this.isOccupied[index]){
                         this.hashTable[index] = temp[i] ;
                         this.isOccupied[index] = true ;
@@ -176,33 +184,29 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
                     else {
                         finished = false ;          /* collision , create new hash function */
                         numOfCollisions++;
-                        /*System.out.println("collision , will re-build") ;*/
                         finished_old = false ;
                         break ;
                     }
                 }
             }
-            if(!finished_old)
-                break ;
-
-            for(T key : keys){
-                int index = this.hasher.hash_code(key) ;   /* insert element value in the hashable */
-                if(this.isOccupied[index] && this.hashTable[index].equals(key)){
-                    continue;
-                }
-                else if(this.isOccupied[index] && !this.hashTable[index].equals(key)){
-                    finished = false;
-                    numOfCollisions++;
-                    break;
-                }
-                else {
-                    this.hashTable[index] = key;
-                    this.isOccupied[index] = true;
-                    this.currentInputSize++;
+            if(finished_old) {
+                for (T key : keys) {
+                    int index = this.hasher.hash_code(key);   /* insert element value in the hashable */
+                    if (this.isOccupied[index] && this.check_equality_of(this.hashTable[index],key)) {}
+                    else if (this.isOccupied[index] && !this.check_equality_of(this.hashTable[index],key)) {
+                        finished = false;
+                        numOfCollisions++;
+                        break;
+                    } else {
+                        this.hashTable[index] = key;
+                        this.isOccupied[index] = true;
+                        number_of_successful_insertions++;
+                    }
                 }
             }
         }while(!finished) ;
-
+        this.number_of_rehashing_times += numOfCollisions ;
+        this.currentInputSize += number_of_successful_insertions ;
         return new int[]{this.currentInputSize - oldSize, numOfCollisions};
     }
     @Override
@@ -232,6 +236,9 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
     }
 
 
+    public int getNumber_of_rehashing_times() {
+        return number_of_rehashing_times;
+    }
 
     @Override
     public ArrayList<T> getKeys() {
@@ -243,89 +250,10 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
         }
         return keys;
     }
-
-
-    public static void main(String[] args) {
-        Perfect_Hashing_NSquare<Integer> perfect_hashing_nSquare = new Perfect_Hashing_NSquare<>() ;
-//        perfect_hashing_nSquare.insert(10);
-//        perfect_hashing_nSquare.insert(18);
-//        perfect_hashing_nSquare.insert(25);
-//        perfect_hashing_nSquare.insert(39);
-//        perfect_hashing_nSquare.insert(65);
-//        perfect_hashing_nSquare.insert(82);
-//        perfect_hashing_nSquare.insert(111);
-//        System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
-//        System.out.println(perfect_hashing_nSquare.getAllocatedSize());
-//        System.out.println(perfect_hashing_nSquare.getKeys());
-//        perfect_hashing_nSquare.delete(10);
-//        perfect_hashing_nSquare.delete(18);
-//        perfect_hashing_nSquare.delete(25);
-//        perfect_hashing_nSquare.delete(39);
-//        perfect_hashing_nSquare.delete(65);
-//        perfect_hashing_nSquare.delete(82);
-//        System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
-//        System.out.println(perfect_hashing_nSquare.getAllocatedSize());
-//        System.out.println(perfect_hashing_nSquare.getKeys());
-//        System.out.println(perfect_hashing_nSquare.search(111));
-//        System.out.println(perfect_hashing_nSquare.search(10));
-        ArrayList<Integer> keys = new ArrayList<>();
-        keys.add(10);
-        keys.add(18);
-        keys.add(25);
-        keys.add(39);
-        keys.add(65);
-        keys.add(82);
-        keys.add(111);
-        keys.add(82);
-        System.out.println(perfect_hashing_nSquare.batchInsert(keys)[0]);
-        //     System.out.println(perfect_hashing_nSquare.getAllocatedSize());
-        System.out.println(perfect_hashing_nSquare.getKeys());
-        ArrayList<Integer> keys3 = new ArrayList<>();
-
-        keys3.add(65);
-        keys3.add(82);
-        keys3.add(111);
-        keys3.add(82);
-        keys3.add(100);
-        System.out.println(perfect_hashing_nSquare.batchInsert(keys3)[0]);
-        System.out.println(perfect_hashing_nSquare.getKeys());
-
-        ArrayList<Integer> keys2 = new ArrayList<>();
-        keys2.add(10);
-        keys2.add(10);
-        keys2.add(111);
-        keys2.add(25);
-        keys2.add(30);
-        perfect_hashing_nSquare.batchDelete(keys2);
-        System.out.println();
-        System.out.println(perfect_hashing_nSquare.getAllocatedSize());
-        System.out.println(perfect_hashing_nSquare.getKeys());
-        System.out.println(perfect_hashing_nSquare.search(30));
-        System.out.println(perfect_hashing_nSquare.search(111));
-        System.out.println(perfect_hashing_nSquare.search(39));
-
-//        Perfect_Hashing_NSquare<String> perfect_hashing_nSquare = new Perfect_Hashing_NSquare<>() ;
-//        perfect_hashing_nSquare.insert("hello");
-//        perfect_hashing_nSquare.insert("world");
-//        perfect_hashing_nSquare.insert("this");
-//        perfect_hashing_nSquare.insert("is");
-//        perfect_hashing_nSquare.insert("a");
-//        perfect_hashing_nSquare.insert("test");
-//
-//        System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
-//System.out.println(perfect_hashing_nSquare.getAllocatedSize());
-//System.out.println(perfect_hashing_nSquare.getKeys());
-//perfect_hashing_nSquare.delete("hello");
-//perfect_hashing_nSquare.delete("world");
-//        perfect_hashing_nSquare.delete("world");
-//        perfect_hashing_nSquare.delete("ff");
-//System.out.println(perfect_hashing_nSquare.getCurrentInputSize());
-//System.out.println(perfect_hashing_nSquare.getAllocatedSize());
-//System.out.println(perfect_hashing_nSquare.getKeys());
-//
-//System.out.println(perfect_hashing_nSquare.search("this"));
-
-
-
+    /* Function for check equality for two keys */
+    private boolean check_equality_of(T key1 , T key2 ){
+        if(key1 instanceof String)
+            return key1.equals(key2) ;
+        return key1 == key2 ;
     }
 }
