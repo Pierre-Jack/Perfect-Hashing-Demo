@@ -1,26 +1,31 @@
-public class UniversalHasher<T> extends Hasher<T> {
+public class UniversalHasher<T> extends Hasher<T>{
+    private int m;
     private int b;
     private Universal_Hash_Family<T> family;
     private Hashing<T> hashing;
+    private boolean [][] func ;
 
     public UniversalHasher(int m) {
         super(m);
-        b = 0;
-        while((1 << b) < m) b += 1;
-
+        this.b = (int) (Math.log(m) /Math.log(2) ) ;
+        System.out.println("b= " + this.b) ;
     }
 
     @Override
     int hash_code(T key) {
         if(family == null || hashing == null) {
             family = new Universal_Hash_Family<T>(key, b);
-            hashing = new Hashing<T>(family.hash_function());
+            this.func = family.hash_function();
+            hashing = new Hashing<T>(this.func);
         }
         return hashing.hash_code(key);
     }
     public void regenerate(){
-        if (family == null) return;
-        hashing = new Hashing<T>(family.hash_function());
+        this.func = family.hash_function();
+        hashing = new Hashing<T>(this.func);
     }
 
+    public boolean[][] getFunc() {
+        return func;
+    }
 }
