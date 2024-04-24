@@ -96,9 +96,7 @@ public class Perfect_Hashing_NSquare<T> implements PerfectHashTable<T>{
             this.hashTable = (T[]) new Object[this.sizeOfHashTable];     /* clear hashTable and isOccupied array */
             this.isOccupied = new boolean[this.sizeOfHashTable];
             Arrays.fill(this.isOccupied, false);
-
-            System.out.println("will re-build with N = " + this.sizeOfMaxInput +  " , load factor broken = " + load_factor_broken) ;
-
+            
             this.hasher.regenerate();                       /* regenrate new hash function */
             int index = this.hasher.hash_code(key) ;     /* insert element value in the hashable */
             this.hashTable[index] = key ;
