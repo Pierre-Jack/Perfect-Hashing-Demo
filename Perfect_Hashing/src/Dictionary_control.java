@@ -23,43 +23,43 @@ public class Dictionary_control {
                 break;
 
             case 2:
-            System.out.print("Enter the word to delete: ");
-            word = scanner.next();
-            if (dic.delete(word)) {
-                System.out.println("Word deleted successfully");
-            } else {
-                System.out.println("Word doesn't exist");
-            }
-            break;
+                System.out.print("Enter the word to delete: ");
+                word = scanner.next();
+                if (dic.delete(word)) {
+                    System.out.println("Word deleted successfully");
+                } else {
+                    System.out.println("Word doesn't exist");
+                }
+                break;
 
             case 3:
-            System.out.print("Enter the word to search for: ");
-            word = scanner.next();
-            if (dic.search(word)) {
-                System.out.println("Word is found");
-            } else {
-                System.out.println("Word is not found");
-            }
-            break;
+                System.out.print("Enter the word to search for: ");
+                word = scanner.next();
+                if (dic.search(word)) {
+                    System.out.println("Word is found");
+                } else {
+                    System.out.println("Word is not found");
+                }
+                break;
 
             case 4:
-            System.out.print("Enter the path of the file to insert: ");
-            String filePath = scanner.nextLine().trim();
-            dic.batchInsert(filePath);
+                System.out.print("Enter the path of the file to insert: ");
+                String filePath = scanner.nextLine().trim();
+                dic.batchInsert(filePath);
 
-            break;
+                break;
             
             case 5:
-            System.out.print("Enter the path of the file to delete: ");
-            filePath = scanner.nextLine().trim();
-            dic.batchDelete(filePath);
-            break;
+                System.out.print("Enter the path of the file to delete: ");
+                filePath = scanner.nextLine().trim();
+                dic.batchDelete(filePath);
+                break;
 
             case 6:
-            Main.main(null);
+                Main.main(null);
 
             case 7:
-            System.exit(0);
+                System.exit(0);
 
 
             default:
