@@ -33,7 +33,7 @@ public class Dictionary {
     {
         return this.pf.search(word);
     }
-    public int batchInsert(String filePath){
+    void batchInsert(String filePath){
         int count = 0 ;
         ArrayList<String> stringList = new ArrayList<>();
         try
@@ -45,14 +45,16 @@ public class Dictionary {
                 stringList.add(scanFile.nextLine());
             }
             count = this.pf.batchInsert(stringList)[0];
+            System.out.println(count + " words inserted successfully");
+            System.out.println((stringList.size()-count) +" words are already exist");
 
         }catch (FileNotFoundException e){
             System.out.println(filePath + "is not found");
         }
-        return count;
+        
     }
 
-    public int batchDelete(String filePath){
+    void batchDelete(String filePath){
         int count = 0 ;
         ArrayList<String> stringList = new ArrayList<>();
         try
@@ -64,9 +66,11 @@ public class Dictionary {
                 stringList.add(scanFile.nextLine());
             }
             count = this.pf.batchDelete(stringList);
+            System.out.println(count + " words deleted successfully");
+            System.out.println((stringList.size()-count) +" words don't exist");
         }catch (FileNotFoundException e){
             System.out.println("not found");
         }
-        return count;
+        
     }
 }

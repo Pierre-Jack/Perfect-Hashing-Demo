@@ -15,8 +15,10 @@ public class Dictionary_control {
                 String word = scanner.next();
                 if (dic.insert(word)[0]) {
                     System.out.println("Word inserted successfully");
-                } else {
-                    System.out.println("Word already exists");
+                }
+                else
+                {
+                    System.out.println("Word is already exist");
                 }
                 break;
 
@@ -43,15 +45,14 @@ public class Dictionary_control {
             case 4:
             System.out.print("Enter the path of the file to insert: ");
             String filePath = scanner.nextLine().trim();
-            int count = dic.batchInsert(filePath);
-            System.out.println(count + " words inserted successfully");
+            dic.batchInsert(filePath);
+
             break;
             
             case 5:
             System.out.print("Enter the path of the file to delete: ");
             filePath = scanner.nextLine().trim();
-            count = dic.batchDelete(filePath);
-            System.out.println(count + " words deleted successfully");
+            dic.batchDelete(filePath);
             break;
 
             case 6:

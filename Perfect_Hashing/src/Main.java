@@ -36,18 +36,26 @@ public class Main {
         System.out.print("Choose your hashing method: ");
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-        Dictionary_control dictionary_control= new Dictionary_control(choice);
-        if(dictionary_control != null)
+        if (choice==1 || choice==2)
         {
-            System.out.println("Table created successfully");
-        }
+            Dictionary_control dictionary_control= new Dictionary_control(choice);
+            if(dictionary_control != null)
+            {
+                System.out.println("Table created successfully");
+            }
 
-        while(true)
-        {
-            operations();
-            int operation = scanner.nextInt();
-            dictionary_control.perform(operation);
+            while(true)
+            {
+                operations();
+                int operation = scanner.nextInt();
+                dictionary_control.perform(operation);
+            }
         }
+        else
+        {
+            System.out.println("invalid choice");
+            Main.main(args);
+        }    
 
 
 
